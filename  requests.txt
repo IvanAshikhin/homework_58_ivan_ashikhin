@@ -1,0 +1,28 @@
+Task 1:
+from webapp.models.task import Task
+from datetime import date, timedelta
+end_date = date.today()
+start_date = end_date - timedelta(days=30)
+closed_tasks = Task.objects.filter(status__name='done', edit_time__range=[start_date, end_date])
+for task in closed_tasks:
+    print(task.id, task.summary, task.description, task.status.name)
+
+
+Task 2:
+from webapp.models.task import Task
+tasks = Task.objects.filter(status__name__in=['new', 'in progress'], type__name__in=['bug', 'enhancement'])
+for task in tasks:
+    print(task.id, task.summary, task.description, task.status.name)
+
+
+
+Task 3:
+from django.db.models import Q
+from webapp.models.task import Task
+tasks = Task.objects.filter(
+    Q(summary__icontains='bug') | Q(type__name='bug')
+).filter(
+    Q(status__name='new') | Q(status__name='in progress')
+)
+for task in tasks:
+    print(task.id, task.summary, task.description, task.status.name)
